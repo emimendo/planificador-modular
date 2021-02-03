@@ -1,0 +1,114 @@
+/*resCarousel Css*/
+
+.outt {
+    display: none;
+}
+
+.leftRs {
+    position: absolute;
+    margin: auto;
+    top: 60px;
+    bottom: 0;
+    z-index: 100;
+	left: -10px;
+    width: 40px;
+    height: 50px;
+    /*box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+    border-radius: 999px;*/
+	font-size:1.6rem;	
+}
+
+.rightRs {
+    position: absolute;
+    margin: auto;
+    top: 60px;
+    right: -10px;
+    bottom: 0;
+    z-index: 100;
+    width: 40px;
+    height: 50px;
+    /*box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+    border-radius: 999px;*/
+	font-size:1.6rem;	
+}
+
+.resCarousel {
+    /*float: left;
+    overflow: hidden;*/
+    width: 100%;
+    position: relative;
+}
+
+.resCarousel-inner {
+    overflow-x: hidden;
+    white-space: nowrap;
+    font-size: 0;
+    vertical-align: top;
+}
+
+.resCarousel-inner .item {
+    display: inline-block;
+    font-size: 14px;
+    white-space: initial;
+	cursor:default;
+	border:none;
+}
+
+
+/*banner*/
+
+.banner {
+    overflow: hidden !important;
+}
+
+
+/*tile css*/
+
+.resCarousel-inner .item .tile {
+    background: white;
+    /*box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);*/
+    margin: 5px;
+	padding: .6rem .6rem;
+	border: 1px solid #ddd;
+}
+
+.resCarousel-inner .itemContainer {
+    margin-left:115px;
+}
+
+
+/*animation*/
+
+.resCarousel[data-animator="lazy"] .item {
+    transition: .6s ease all;
+}
+
+@media (max-width: 767px) {
+    .leftRs,
+    .rightRs {
+        /*display: none;*/
+    }
+    .resCarousel-inner {
+        overflow-x: auto;
+    }
+}
+
+
+/* proveedoresMateriasPrimas */
+#proveedoresMateriasPrimas .rightRs ,
+#proveedoresMateriasPrimas .leftRs {
+    width: 25px;
+    height: 40px;
+    padding: 0px 0px 0px 5px;
+	font-size:1.4em;
+	top: 0px;	
+}
+#proveedoresMateriasPrimas .rightRs {
+    right: 0px;
+} 
+#proveedoresMateriasPrimas .resPoint {
+    display:none;
+}  
+ 
+
+/*resCarousel Css End*/

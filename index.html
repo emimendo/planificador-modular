@@ -1,0 +1,1368 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Planificador Modular Admin</title>
+
+    <!-- Bootstrap CSS-->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts -->
+    <link href="assets/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	
+    <!-- Styles -->
+	<link href="assets/css/sb-admin.css" rel="stylesheet">
+		
+    
+	<!-- Carousel -->
+	<link href="assets/css/resCarousel.css" rel="stylesheet">
+	<!-- Style Print -->	
+	<link rel="stylesheet" href="assets/css/print.css" type="text/css" media="print">
+	
+    <!-- Bootstrap and Jquery  -->
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+  	<!-- <script type="text/javascript" src="asset/js/jquery-ui.js"></script>	-->	
+    <script type="text/javascript" src="js/jquery-ui.js"></script>	
+		<script type="text/javascript" src="assets/js/bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="https://modularidad.techoff-it.com/js/calcule.js"></script>
+    <!-- Planes Jquery Draggable and Dropable -->
+    <script type="text/javascript">
+			jQuery(document).ready(function($){
+			$(".mozgat").draggable({
+				helper: "clone",
+				appendTo: "body",
+				revert: "invalid",
+				snap: ".tapad",
+				stack: ".mozgat",
+				scroll: false
+			});
+			$("#viewportContainer").droppable({
+				cursor: "move",
+				accept: ".mozgat",
+				activeClass: "snaptarget-hover",
+				drop: function (event, ui) {
+				var ct = $(this);
+				var item = $(ui.draggable);
+				var origPos;
+				var ctPos = ct.offset();
+	
+				if (item.is('.tapad')) {
+					origPos = item.offset();
+					ct.append(item);
+				} else {
+					origPos = ui.offset;
+					item = item.clone();
+					ct.append(item);
+					item.removeClass("ui-draggable");
+					item.addClass('tapad');
+					item.draggable({
+					containment: "#viewport",
+					snap: ".tapad",
+					stack: ".mozgat",
+					scroll: false
+					});
+			item.on('dragend',function(){
+			alert(item.getPosition().x+"/"+item.getPosition().y);
+			});
+			//item.resizable();
+			item.addClass('remove');
+			var ex = $('<a href="Javascript:void(0)" class="delete" title="Remove">X</a>').css({
+			'position': 'absolute',
+			'top': -18,
+			'right': -1,
+			'height': 17,
+			'width': 12,
+			'line-height': '100%',
+			'background-color': 'white'
+			});
+			$(ex).insertAfter($(item.find('p')));
+			item.appendTo('#droppable');
+			$('.delete').on('click', function () {
+			$(this).parent('span').remove();
+			});
+			var ro = $('<div class="rotator"></div>').addClass('handler').css({
+			'position': 'absolute',
+			'top': -10,
+			'left': 0,
+			'height': 10,
+			'width': 10,
+			'background-color': 'green'
+			});
+			$(ro).insertAfter($(item.find('p')));
+			item.appendTo('#droppable');
+			applyRotation();
+				item.css({
+					top: origPos.top - ctPos.top -1 + 31,
+					left: origPos.left - ctPos.left -0
+				});
+			}
+				}
+			});
+			$('#snaptarget3').droppable({
+			over: function(event, ui) {
+				ui.draggable.remove();
+			}
+			});  
+		});
+		function applyRotation() {
+			$('.handler').draggable({
+			opacity: 0.01,
+			helper: 'clone',
+			drag: function (event, ui) {
+				var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
+	
+				$(this).parent().css({
+				'-moz-transform': rotateCSS,
+				'-webkit-transform': rotateCSS
+				});
+			}
+			});
+		}
+		 </script>	
+
+	<!-- jQuery ResCarousel -->
+    <script>
+        //ResCarouselCustom();
+        var pageRefresh = true;
+
+        function ResCarouselCustom() {
+            var items = $("#dItems").val(),
+                slide = $("#dSlide").val(),
+                speed = $("#dSpeed").val(),
+                interval = $("#dInterval").val()
+
+            var itemsD = "data-items=\"" + items + "\"",
+                slideD = "data-slide=\"" + slide + "\"",
+                speedD = "data-speed=\"" + speed + "\"",
+                intervalD = "data-interval=\"" + interval + "\"";
+
+
+            var atts = "";
+            atts += items != "" ? itemsD + " " : "";
+            atts += slide != "" ? slideD + " " : "";
+            atts += speed != "" ? speedD + " " : "";
+            atts += interval != "" ? intervalD + " " : ""
+
+            //console.log(atts);
+
+            var dat = "";
+            dat += '<h4 >' + atts + '</h4>'
+            dat += '<div class=\"resCarousel\" ' + atts + '>'
+            dat += '<div class="resCarousel-inner">'
+            for (var i = 1; i <= 14; i++) {
+                dat += '<div class=\"item\"><div><h1>' + i + '</h1></div></div>'
+            }
+            dat += '</div>'
+            dat += '<button class=\'btn btn-default leftRs\'><i class=\"fa fa-fw fa-angle-left\"></i></button>'
+            dat += '<button class=\'btn btn-default rightRs\'><i class=\"fa fa-fw fa-angle-right\"></i></button>    </div>'
+            console.log(dat);
+            $("#customRes").html(null).append(dat);
+
+            if (!pageRefresh) {
+                ResCarouselSize();
+            } else {
+                pageRefresh = false;
+            }
+            //ResCarouselSlide();
+        }
+
+        $("#eventLoad").on('ResCarouselLoad', function() {
+            //console.log("triggered");
+            var dat = "";
+            var lenghtI = $(this).find(".item").length;
+            if (lenghtI <= 30) {
+                for (var i = lenghtI; i <= lenghtI + 10; i++) {
+                    dat += '<div class="item"><div class="tile"><div><h1>' + (i + 1) + '</h1></div><h3>Title</h3><p>content</p></div></div>'
+                }
+                $(this).append(dat);
+            }
+        });
+
+    </script>
+
+	<script type="text/javascript" src="assets/js/resCarousel.js"></script>
+	
+    <!-- Button Show Hiden box -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#sidebarToggle").click(function () {
+				$("#sidebarRight").toggle(1500,"easeOutQuint");
+				$("#proveedoresPrefabricadoModularizado").toggle(1500,"easeOutQuint");
+				$("#catalogo").toggle(1500,"easeOutQuint");
+			});  
+			// Print button
+			$('a.print-button').click(function(){
+				window.print();
+				return false;
+			});
+			// Add class body - ActivePlaneD
+			$('img.planeDetailShow').on('click', function() {
+			  $('body').addClass('ActivePlaneD');
+			  return false;
+			});
+			// Remove class body - ActivePlaneD
+			$('a.planeDetailHidden').on('click', function() {
+			  $('body.ActivePlaneD').removeClass('ActivePlaneD');
+			});
+		});
+	</script>
+	
+  </head>
+
+  <body id="page-top" class="home">
+
+    <div id="wrapper">
+
+	  <!-- Content-wrapper -->
+      <div id="content-wrapper">
+
+			<!-- Header -->
+		<header id="header"> 
+				<h2>PLANIFICADOR MODULAR 1.0 - PROTOTIPO PREFABRICADO Y MODULARIZADO</h2>
+				<h3>DISEÑA interactuando con bibliotecas de fabricantes y proveedores de materias primas + CREA TU PROYECTO estimando costos y plazos.</h3>
+				<hr />
+			</header>		
+			<!-- /header -->
+
+        <div class="container-fluid">
+
+			<div class="row d-flex flex-row">
+
+				<div class="col-sm-3 pl-3 pr-3 h-100" id="sidebarLeft">
+
+					<div id="sidebar">
+					
+						<!-- nav -->
+						<nav class="navbar  navbar-light bg-light">
+							<a class="navbar-brand mr-1 pl-2" href="#">PLANIFICADOR  <span>Modular</span></a>
+							<button class="btn btn-link btn-sm text-dark order-1 order-sm-0" id="sidebarToggle" href="#">
+								<i class="fas fa-bars"></i>
+							</button>
+							<!-- Navbar -->
+							<ul class="navbar-nav ml-auto ml-md-0 float-left d-none">
+								<li class="nav-item dropdown no-arrow">
+									<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										
+									</a>
+									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+									<a class="dropdown-item" href="#">Mis Datos</a>
+									<a class="dropdown-item" href="#">Mis Planos</a>
+									<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Salir</a>
+									</div>
+								</li>
+							</ul>
+
+							<div class="btn-group text-uppercase mt-3 mb-2" role="group" aria-label="...">
+								<a href="#" class="btn btn-default btn-sm print-button"><i class="fas fa-print"></i> Imprimir</a>
+								<a href="#" class="btn btn-default btn-sm"><i class="fas fa-comment"></i> Comentar</a>
+								<a href="#" class="btn btn-primary btn-sm d-none">Guardar</a>
+								<a href="#" class="btn btn-default btn-sm" data-toggle="modal" data-target="#logoutModal">Salir</a>
+							</div>
+							
+						</nav>
+						<!-- /.nav -->
+					
+						<!-- Catalogo -->
+						<div class="card mb-3 h-100" id="catalogo">
+							<div class="card-header py-1 pl-4 d-none">
+								CATALOGO
+							</div>
+							<div class="card-body">
+							
+								<!--Accordion wrapper-->
+								<div class="accordion md-accordion accordion-5" id="accordionEx5" role="tablist" aria-multiselectable="true">
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading30">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse30" aria-expanded="true"
+										aria-controls="collapse30">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  DEPARTAMENTOS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse30" class="collapse show" role="tabpanel" aria-labelledby="heading30" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-03.png" class="img01 planeDetailShow" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+													 <p>$</p><p class="price">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01 planeDetailShow" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 1">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01 planeDetailShow" alt="REF. 002">
+														<p class="number-reference">Plano 002</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 2">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01 planeDetailShow" alt="REF. 003">
+														<p class="number-reference">Plano 003</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 3">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01 planeDetailShow" alt="REF. 004">
+														<p class="number-reference">Plano 004</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 4">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01 planeDetailShow" alt="REF. 005">
+														<p class="number-reference">Plano 005</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 5">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01 planeDetailShow" alt="REF. 006">
+														<p class="number-reference">Plano 006</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 6">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading31">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse31" aria-expanded="true"
+										aria-controls="collapse31">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										 VIVIENDAS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse31" class="collapse" role="tabpanel" aria-labelledby="heading31" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 8">$850.000</p>
+													</span>
+												</li>						 
+												<li>
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 9">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 10">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 11">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 12 ">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 13">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 14">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading32">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse32" aria-expanded="true"
+										aria-controls="collapse32">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  LOCALES COMERCIALES  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse32" class="collapse" role="tabpanel" aria-labelledby="heading32" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 15">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 16">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 17">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 18">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 19">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 20">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 21">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading33">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse33" aria-expanded="true"
+										aria-controls="collapse33">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  INMUEBLES INDUSTRIALES  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse33" class="collapse" role="tabpanel" aria-labelledby="heading33" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 22">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 23">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 24">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 25">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 26">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 27">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 28">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading34">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse34" aria-expanded="true"
+										aria-controls="collapse34">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										 OFICINAS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse34" class="collapse" role="tabpanel" aria-labelledby="heading34" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 29">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 30">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 31">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 32">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 33">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 34">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 35">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading35">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse35" aria-expanded="true"
+										aria-controls="collapse35">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  EDIFICIOS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse35" class="collapse" role="tabpanel" aria-labelledby="heading35" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 36">000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 37">000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 38">000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 39">000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 40">000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 41">000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 42">000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading36">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse36" aria-expanded="true"
+										aria-controls="collapse36">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  GRANDES OBRAS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse36" class="collapse" role="tabpanel" aria-labelledby="heading36" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 43">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 44">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 45">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 46">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 47">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 48">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 49">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+
+								  <!-- Accordion card -->
+								  <div class="card">
+
+									<!-- Card header -->
+									<div class="card-header p-0 z-depth-1" role="tab" id="heading37">
+									  <a data-toggle="collapse" data-parent="#accordionEx5" href="#collapse37" aria-expanded="true"
+										aria-controls="collapse37">
+										<h6 class="text-uppercase white-text ml-3 mb-0 py-1 pl-2 mt-1">
+										  ELEMENTOS URBANÍSTICOS  <i class="fas fa-angle-down rotate-icon float-right mr-4"></i>
+										</h6>
+									  </a>
+									</div>
+
+									<!-- Card body -->
+									<div id="collapse37" class="collapse" role="tabpanel" aria-labelledby="heading37" data-parent="#accordionEx5">
+									  <div class="card-body catalogoContentScroll scrollbar rgba-black-light white-text z-depth-1">
+											<ul class="catalogoPlanos">
+												<li style="display:none">
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 001">
+														<p class="number-reference">REF. 001</p>
+														<p class="number-code">COD. 001</p>
+														<p class="number-surface">SUP. 200 m2</p>													
+														<p class="detail">3 Mesas 2 ventas, 2 puertas.</p>
+														<p class="price 50">$850.000</p>
+													</span>
+												</li>						
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 001">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 51">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 002">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 52">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 003">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 53">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-01.png" class="img01" alt="REF. 004">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 54">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-02.png" class="img01" alt="REF. 005">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 55">$850.000</p>
+													</span>
+												</li>
+												<li>
+													<span class="mozgat f-szurke ">
+														<img src="images/01-pabellon-modelo-03.png" class="img01" alt="REF. 006">
+														<p class="number-reference">Plano 001</p>
+														<p class="number-surface">Sup. 200m2</p>													
+														<p class="price 56">$850.000</p>
+													</span>
+												</li>											
+											</ul>
+									  </div>
+									</div>
+								  </div>
+								  <!-- Accordion card -->
+								  
+								</div>
+								<!--/.Accordion wrapper-->						
+							
+							</div>
+						</div>
+					</div>
+					<!-- /sidebar Left -->
+
+				</div>
+				<!-- /col-3 Catalogo -->
+				
+				<div class="col-sm-6 h-100 pt-4" id="mainContent">	
+					<!-- Viewport -->
+					<div class="card mb-3 h-100" >
+						<div class="card-header py-1">
+							VIEWPORT
+						</div>
+						<div class="card-body" id="viewportContainer">
+							<div id="viewport">
+							</div>
+							<!-- /viewportContainer -->
+						</div>
+						<div class="card-footer small text-muted">
+							<a class="btn btn-outline-dark btn-sm float-right d-none" href="#" role="button">Descargar PDF</a>							
+						</div>
+					</div>
+				</div>
+				<!-- /col-6 viewport -->
+				
+				<div class="col-sm-3 pt-4" id="sidebarRight">
+			
+					<!-- Box Plane Detail -->
+					<div class="boxPlaneDetail">
+						<a class="btn btn-outline-dark btn-sm float-right planeDetailHidden" href="#" role="button">Cerrar ventana</a>
+						<h4>Detalle del plano 001</h4>
+						<hr/>
+						<p>Detalle 1: contenidos del detalle 1</p>
+						<p>Detalle 2: contenidos del detalle 2</p>
+						<p>Detalle 3: contenidos del detalle 3</p>
+						<p>Detalle 4: contenidos del detalle 4</p>
+						<p>Detalle 5: contenidos del detalle 5</p>
+					</div>
+					<!-- /boxPlaneDetail -->
+					
+					<!-- Proveedores de Materias Primas -->
+					<div class="card mb-3" id="proveedoresMateriasPrimas">
+						<div class="card-header py-1">
+							PROVEEDORES DE MATERIALES
+						</div>
+						<div class="card-body h-100 pt-2 pl-2 pr-0 pb-2">
+						
+							<!-- Carousel -->
+							<div class="resCarousel" data-items="1-1-1-1" data-slide="1" data-speed="700" data-interval="4000">
+								<div class="resCarousel-inner banner">
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>
+									<div class="item py-2 pr-2 pl-2">
+										<img src="images/proveedor01.png" class="img-fluid float-left mr-2" />
+										<h6>Nombre Proveedor</h6>
+										<a href="#" class="btn btn-outline-dark btn-sm" target="_blank">SITIO WEB</a> <a href="#" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#sendEmailModal">CATALAGO</a>
+									</div>									
+								</div>
+								<button class='btn btn-default leftRs'><</button>
+								<button class='btn btn-default rightRs'>></button>
+							</div>
+							<!-- /Carousel -->
+						
+						</div>
+					</div>
+					
+					<!-- Computos -->
+					<div class="card mb-3" id="computos">
+						<div class="card-header py-1">
+							COMPUTOS
+						</div>
+						<div class="card-body scrollContent" data-spy="scroll">
+						  <div class="table-responsive">		  
+							<table class="table table-stats table-fixed table-sm"  width="100%" cellspacing="0">
+							  <thead>
+								<tr>
+								  <th class="col1-number-reference">Plano</th>
+								  <th>SUP. M2</th>
+								  <th>$</th>
+								  <th>Cant</th>
+								  <th><i class="fas fa-trash"></i></th>
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr id="total1">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">001</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								<tr id="total2">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">002</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								<tr id="total3">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">003</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								<tr id="total4">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">004</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>							  
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								<tr id="total5">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">005</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								<tr id="total6">
+								  <td class="col1-number-reference"><a class="btn btn-outline-dark btn-sm" href="#" role="button">006</a> </td>
+								  <td id="m2_detail"><strong></strong></td>
+								  <td id="price_detail"><strong></strong></td>
+								  <td id="quantity_detail"><strong></strong></td>
+								  <td><button type="button" class="btn btn-danger btn-sm">X</button></td>
+								</tr>
+								</tbody>								
+							  <tfoot class="d-none">
+								<tr>
+								  <td></th>
+								  <td id="m2">m2<strong></strong></th>
+								  <td id="sum">$<strong></strong></th>
+								  <td id="quantity"><strong></strong></th>
+								  <td></th>
+								</tr>
+							  </tfoot>								
+							</table>
+						  </div>
+						</div>
+						
+						<!-- Total -->
+						<div id="computosTotal">
+							<dl class="row">
+								<dt class="col-sm-6 text-right">TOTAL $</dt>
+								<dd class="col-sm-6" id="sum"> <strong>0</strong></dd>
+								<dt class="col-sm-6 text-right">TOTAL CANT.</dt>
+								<dd class="col-sm-6" id="quantity"><strong >0</strong></dd>
+								<dt class="col-sm-6 text-right">TOTAL SUP. M2</dt>
+								<dd class="col-sm-6" id="m2"><strong>0</strong></dd>
+							</dl>						
+						</div>						
+						
+						<div class="card-footer small text-muted">
+							<button class="btn btn-primary btn-sm text-upercasse ">Calcule</button>
+							<a class="btn btn-outline-dark btn-sm float-right d-none" href="#" role="button">Descargar PDF</a>										
+						</div>
+					  </div>
+
+				</div>
+				<!-- /col-3 Computos -->
+			</div>					
+			<!-- /row -->
+			
+			<!-- Carousel multi - Fabricantes y Proveedores de Servicios de Construccion Prefabricado y Modularizado -->
+			<div class="row" id="proveedoresPrefabricadoModularizado">
+				<div class="col-sm-12">	
+					
+					<!-- Carousel -->
+					<div class="resCarousel" data-items="2-4-4-4" data-interval="4000" data-speed="700" data-slide="1" >
+						<div class="resCarousel-inner">
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+							<div class="item">
+								<div class="tile">
+									<img src="images/fabricante01.png" class="img-fluid float-left">
+									<div class="itemContainer">
+										<p class="companyWeb"><a href="#" class="btn btn-outline-dark btn-sm" target="_blank">www.fabricante.com</a></p>
+										<hr class="my-0 py-0" />
+										<ul class="companyProduct ml-3 pl-1">
+											<li>Modulos habitacionales</li>
+											<li>Contaniner modificados</li>
+										</ul>				
+										<hr class="my-0 py-0" />
+										<p class="companyAddress">Av. Cordoba (RUTA 9) – CP 1333 Bs As, Argentina.</p>
+										<p class="companyTel"><strong>Tel +54 9 11 1111-1111</strong></p>			
+									</div>									
+									<a href="#" class="btn btn-outline-primary btn-sm d-block text-center mr-3 ml-3 mt-2" data-toggle="modal" data-target="#sendEmailModal">PEDIR COTIZACIÓN DE ANTEPROYECTO</a>									
+								</div>
+							</div>
+
+						</div>
+						<button class='btn btn-default leftRs'><</button>
+						<button class='btn btn-default rightRs'>></button>
+					</div>
+					<!-- /carousel -->
+					
+				</div>
+				<!-- /col-12 Fabricantes y Proveedores de Servicios de Construccion Prefabricado y Modularizado -->	
+				
+			</div>					
+			<!-- /row -->
+		  
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer class="sticky-footer">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>Copyright © PModular 2018</span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+      <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Moda Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLabel">¿Listo para salir?</h6>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Seleccione "Salir" a continuación si está listo para finalizar su sesión actual.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+            <a class="btn btn-primary" href="http://www.modularidad.com/ebu/nuestros-servicios/">Salir</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Proveedores Send Email -->
+    <div class="modal fade" id="sendEmailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLabel">Enviar Cotización</h6>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+			<!--Body-->
+			<div class="form-group">
+				<div class="input-group mb-2">
+					<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fa fa-user text-black"></i></div>
+					</div>
+					<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre y Apellido" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="input-group mb-2">
+					<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fa fa-envelope text-black"></i></div>
+					</div>
+					<input type="email" class="form-control" id="nombre" name="email" placeholder="ejemplo@gmail.com" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="input-group mb-2">
+					<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fa fa-comment text-black"></i></div>
+					</div>
+					<textarea class="form-control" placeholder="Envianos tu Mensaje" required></textarea>
+				</div>
+			</div>
+		  
+		  </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+			<input type="submit" value="Enviar" class="btn btn-primary">
+          </div>
+        </div>
+      </div>
+    </div>
+	
+  </body>
+
+</html>
